@@ -12869,11 +12869,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\YX\\projects\\projects.csproj",
+      "projectUniqueName": "c:\\YX\\projects\\GraphQLCore\\projects.csproj",
       "projectName": "projects",
-      "projectPath": "C:\\YX\\projects\\projects.csproj",
+      "projectPath": "c:\\YX\\projects\\GraphQLCore\\projects.csproj",
       "packagesPath": "C:\\Users\\jimxs\\.nuget\\packages\\",
-      "outputPath": "C:\\YX\\projects\\obj\\",
+      "outputPath": "c:\\YX\\projects\\GraphQLCore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
