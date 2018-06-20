@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GraphQL;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace projects
 {
@@ -23,26 +25,32 @@ namespace projects
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IHostingEnvironment env)
     {
-      var schema = new Schema { Query = new HelloGraphQLQuery() };
 
       app.Run(async (context) =>
       {
-        var result = await new DocumentExecuter()
-                                .ExecuteAsync(doc =>
-                                {
-                                  doc.Schema = schema;
-                                  doc.Query = @"
-                                    query {
-                                        hello
-                                        what
-                                    }
-                                ";
-                                }).ConfigureAwait(false);
+        if (context.Request.Path.StartsWithSegments("/api/graphql")
+            && string.Equals(context.Request.Method, "POST", StringComparison.OrdinalIgnoreCase))
+        {
+          string body;
 
-        var json = new DocumentWriter(indent: true)
-                                      .Write(result);
+          using (var streamReader = new StreamReader(context.Request.Body))
+          {
+            body = await streamReader.ReadToEndAsync();
 
-        await context.Response.WriteAsync(json);
+            var request = JsonConvert.DeserializeObject<GraphQLRequest>(body);
+            var schema = new Schema { Query = new HelloGraphQLQuery() };
+
+            var result = await new DocumentExecuter().ExecuteAsync(doc =>
+            {
+              doc.Schema = schema;
+              doc.Query = request.Query;
+            }).ConfigureAwait(false);
+
+            var json = new DocumentWriter(indent: true).Write(result);
+            await context.Response.WriteAsync(json);
+
+          }
+        }
       });
 
     }
