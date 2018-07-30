@@ -23,6 +23,7 @@ namespace projects
       services.AddSingleton<IDocumentWriter, DocumentWriter>();
       services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
       services.AddSingleton<HelloGraphQLQuery>();
+      services.AddSingleton<ISchema, HelloGraphQLSchema>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
